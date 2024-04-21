@@ -1,0 +1,21 @@
+# Use uma imagem base do Go
+FROM golang:alpine AS principal
+
+# Defina o diretório de trabalho dentro do contêiner
+WORKDIR /app
+
+# Copie o código fonte para o diretório de trabalho
+COPY go.mod ./
+COPY hello.go ./
+
+# Compile o código Go
+RUN go build -o /main
+
+
+
+FROM scratch
+WORKDIR /
+COPY --from=principal /main /main
+
+# Especifique o comando padrão a ser executado quando o contêiner for iniciado
+ENTRYPOINT ["/main"]
